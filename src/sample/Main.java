@@ -3,15 +3,16 @@ package sample;
 
 import com.sun.glass.ui.CommonDialogs;
 import javafx.application.Application;
+import javafx.collections.FXCollections;
+import javafx.geometry.Orientation;
 import javafx.scene.Scene;
-import javafx.scene.control.Button;
+import javafx.scene.control.*;
 import javafx.scene.layout.*;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.geometry.Insets;
-import javafx.scene.control.Label;
 import javafx.event.*;
 
 import java.io.File;
@@ -35,16 +36,7 @@ public class Main extends Application {
     public void start(Stage primaryStage) throws Exception{
         System.loadLibrary(Core.NATIVE_LIBRARY_NAME);
         window = primaryStage;
-//        window.setTitle("thenewboston");
-//        button = new Button("Click Me");
-//
-//        button.setOnAction(e -> AlertBox.display("Title of Window", "Wow this alert box is awesome!"));
-//
-//        StackPane layout = new StackPane();
-//        layout.getChildren().add(button);
-//        Scene scene = new Scene(layout, 300, 250);
-//        window.setScene(scene);
-//        window.show();
+
         FileChooser fc = new FileChooser();
         FileChooser fc2 = new FileChooser();
 
@@ -56,7 +48,15 @@ public class Main extends Application {
         Button mutiButton = new Button("Load mutiple images");
         Button grayButton = new Button("change to gray");
 
-        HBox hb = new HBox(10, imageButton, mutiButton, grayButton);
+
+        ChoiceBox formatChoice = new ChoiceBox(FXCollections.observableArrayList(
+                "jpg", "jpeg", "jpe", "png", "bmp", "pbm", "ppm","tiff","tif"
+        ));
+        formatChoice.setTooltip(new Tooltip("Select a format to save"));
+        Label formatLabel = new Label("Save Format");
+
+
+        HBox hb = new HBox(10, imageButton, mutiButton, grayButton, formatLabel, formatChoice);
         GridPane grid = new GridPane();
         grid.setPadding(new Insets(10, 10, 10, 10));
         grid.setVgap(8);
@@ -108,7 +108,7 @@ public class Main extends Application {
 
                     fileList.add(file);
                     VBox vbox = new VBox(imgView, label);
-                    GridPane.setConstraints(vbox, row, col);
+                    GridPane.setConstraints(vbox, col, row);
                     grid.getChildren().add(vbox);
                     col++;
                     if(col == 3){
@@ -129,9 +129,15 @@ public class Main extends Application {
 
 
 
+        ScrollPane sp = new ScrollPane();
+        sp.setContent(borderPane);
+        Scene scene = new Scene(sp, 800, 300);
 
 
-        Scene scene = new Scene(borderPane, 400, 300);
+//        sp.setHbarPolicy(ScrollBarPolicy.NEVER);
+//        sp.setVbarPolicy(ScrollBarPolicy.ALWAYS);
+
+        primaryStage.setTitle("Image Management Tool");
         primaryStage.setScene(scene);
         primaryStage.show();
 
