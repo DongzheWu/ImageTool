@@ -15,9 +15,10 @@ public class CovertIMG extends Thread{
     public void run(){
         if(fileList.size() == 0){
             System.out.println("Please upload your images");
+
         }else {
             int count = 0;
-            String jpg = ".jpg";
+            String jpg = ".bmp";
             for (File file : fileList) {
                 String path = file.toURI().toString();
                 path = path.substring(6);

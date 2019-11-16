@@ -1,8 +1,38 @@
-<?import javafx.geometry.Insets?>
-<?import javafx.scene.layout.GridPane?>
+<?xml version="1.0" encoding="UTF-8"?>
 
 <?import javafx.scene.control.Button?>
-<?import javafx.scene.control.Label?>
-<GridPane fx:controller="sample.Controller"
-          xmlns:fx="http://javafx.com/fxml" alignment="center" hgap="10" vgap="10">
+<?import javafx.scene.control.ColorPicker?>
+<?import javafx.scene.control.ToggleButton?>
+<?import javafx.scene.control.ToolBar?>
+<?import javafx.scene.layout.ColumnConstraints?>
+<?import javafx.scene.layout.GridPane?>
+<?import javafx.scene.layout.RowConstraints?>
+<?import javafx.scene.text.TextFlow?>
+<?import javafx.scene.web.WebView?>
+
+
+<GridPane alignment="center" hgap="10" vgap="10" xmlns:fx="http://javafx.com/fxml/1" xmlns="http://javafx.com/javafx/8.0.172-ea" fx:controller="sample.Controller">
+   <columnConstraints>
+      <ColumnConstraints />
+      <ColumnConstraints />
+   </columnConstraints>
+   <rowConstraints>
+      <RowConstraints />
+      <RowConstraints />
+   </rowConstraints>
+   <children>
+      <ColorPicker GridPane.columnIndex="1" GridPane.rowIndex="1" />
+      <WebView prefHeight="200.0" prefWidth="200.0" />
+      <ToggleButton mnemonicParsing="false" text="ToggleButton" />
+      <ToolBar prefHeight="40.0" prefWidth="200.0" GridPane.columnIndex="1">
+        <items>
+          <Button mnemonicParsing="false" text="Button" />
+        </items>
+      </ToolBar>
+      <TextFlow prefHeight="200.0" prefWidth="200.0">
+         <children>
+            <TextFlow prefHeight="200.0" prefWidth="200.0" />
+         </children>
+      </TextFlow>
+   </children>
 </GridPane>

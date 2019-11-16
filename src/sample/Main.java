@@ -8,6 +8,7 @@ import javafx.geometry.Orientation;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.layout.*;
+import javafx.stage.DirectoryChooser;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 import javafx.scene.image.Image;
@@ -39,6 +40,10 @@ public class Main extends Application {
 
         FileChooser fc = new FileChooser();
         FileChooser fc2 = new FileChooser();
+        DirectoryChooser directoryChooser = new DirectoryChooser();
+        directoryChooser.setTitle("Select directory");
+//        directoryChooser.setInitialDirectory(new File("e:\\"));
+
 
         FileChooser.ExtensionFilter addextension = new FileChooser.ExtensionFilter("image", "*.png", "*.jpg");
         fc.getExtensionFilters().add(addextension);
@@ -47,6 +52,7 @@ public class Main extends Application {
         Button imageButton = new Button("Load your image");
         Button mutiButton = new Button("Load mutiple images");
         Button grayButton = new Button("change to gray");
+        Button saveButton = new Button("Download");
 
 
         ChoiceBox formatChoice = new ChoiceBox(FXCollections.observableArrayList(
@@ -56,7 +62,7 @@ public class Main extends Application {
         Label formatLabel = new Label("Save Format");
 
 
-        HBox hb = new HBox(10, imageButton, mutiButton, grayButton, formatLabel, formatChoice);
+        HBox hb = new HBox(10, imageButton, mutiButton, grayButton, formatLabel, formatChoice, saveButton);
         GridPane grid = new GridPane();
         grid.setPadding(new Insets(10, 10, 10, 10));
         grid.setVgap(8);
@@ -100,14 +106,15 @@ public class Main extends Application {
                     Mat imgcv = Imgcodecs.imread(path);
                     int height = imgcv.height();
                     int width = imgcv.width();
-                    Label label = new Label("Image name : " + fileName + " Height : " + height + " Width: " + width);
+                    Label label1 = new Label("Image Name : " + fileName);
+                    Label label2 = new Label(" Height : " + height + " Width: " + width);
 
                     ImageView imgView = new ImageView(img);
                     imgView.setFitHeight(100);
                     imgView.setFitWidth(100);
 
                     fileList.add(file);
-                    VBox vbox = new VBox(imgView, label);
+                    VBox vbox = new VBox(imgView, label1, label2);
                     GridPane.setConstraints(vbox, col, row);
                     grid.getChildren().add(vbox);
                     col++;
@@ -122,9 +129,18 @@ public class Main extends Application {
         });
 
         grayButton.setOnAction(e -> {
+            if(fileList.size() == 0){
+                AlertBox ab = new AlertBox();
+                ab.display("Alert", "You haven't upload your images yet!");
+            }
             CovertIMG gray = new CovertIMG(fileList);
             gray.start();
 
+        });
+
+        saveButton.setOnAction(e -> {
+            System.out.println(formatChoice.getValue());
+            File file = directoryChooser.showDialog(primaryStage);
         });
 
 
