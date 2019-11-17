@@ -65,8 +65,8 @@ public class Main extends Application {
         HBox hb = new HBox(10, imageButton, mutiButton, grayButton, formatLabel, formatChoice, saveButton);
         GridPane grid = new GridPane();
         grid.setPadding(new Insets(10, 10, 10, 10));
-        grid.setVgap(8);
-        grid.setVgap(10);
+        grid.setVgap(20);
+        grid.setHgap(20);
 
         BorderPane borderPane = new BorderPane();
         borderPane.setTop(hb);
