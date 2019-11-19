@@ -24,6 +24,7 @@ import java.util.List;
 
 public class Controller {
     Stage newWindow;
+    public Label uploadLabel;
     public GridPane grid;
     List<File> fileList = new ArrayList<File>();
     public void uploadClick(){
@@ -68,8 +69,9 @@ public class Controller {
                     col = 0;
                     }
                 }
+            uploadLabel.setText("Upload finished !");
         } else{
-            System.out.println("Something is wrong!");
+            uploadLabel.setText("Something wrong !");
         }
     }
 }
