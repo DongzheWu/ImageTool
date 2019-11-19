@@ -26,6 +26,8 @@ public class Controller {
     Stage newWindow;
     public Label uploadLabel;
     public GridPane grid;
+    public ToggleGroup mode;
+    public String savePath;
     List<File> fileList = new ArrayList<File>();
     public void uploadClick(){
         FileChooser fc2 = new FileChooser();
@@ -73,5 +75,15 @@ public class Controller {
         } else{
             uploadLabel.setText("Something wrong !");
         }
+    }
+
+    public void convertClick(){
+        RadioButton selectedRadioButton = (RadioButton) mode.getSelectedToggle();
+        if(fileList.size() == 0){
+            AlertBox ab = new AlertBox();
+            ab.display("Alert", "You haven't upload your images yet!");
+        }
+        CovertIMG covertIMG = new CovertIMG(fileList);
+        covertIMG.start();
     }
 }

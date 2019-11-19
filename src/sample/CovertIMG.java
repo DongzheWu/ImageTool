@@ -5,10 +5,12 @@ import org.opencv.imgcodecs.Imgcodecs;
 import org.opencv.imgproc.Imgproc;
 
 import java.io.File;
+import java.util.ArrayList;
 import java.util.List;
 
 public class CovertIMG extends Thread{
     List<File> fileList;
+    List<File> newfileList;
     public CovertIMG(List<File> fileList){
         this.fileList = fileList;
     }

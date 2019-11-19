@@ -39,13 +39,16 @@
                      <HBox.margin>
                         <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
                      </HBox.margin>
+                     <toggleGroup>
+                        <ToggleGroup fx:id="mode" />
+                     </toggleGroup>
                   </RadioButton>
-                  <RadioButton mnemonicParsing="false" text="YUV">
+                  <RadioButton mnemonicParsing="false" text="YUV" toggleGroup="$mode">
                      <HBox.margin>
                         <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
                      </HBox.margin>
                   </RadioButton>
-                  <RadioButton mnemonicParsing="false" text="Origin">
+                  <RadioButton mnemonicParsing="false" selected="true" text="Origin" toggleGroup="$mode">
                      <HBox.margin>
                         <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
                      </HBox.margin>
@@ -69,7 +72,7 @@
                         <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
                      </HBox.margin>
                   </Label>
-                  <Button mnemonicParsing="false" text="Convert">
+                  <Button mnemonicParsing="false" text="Convert" onAction="#convertClick">
                      <HBox.margin>
                         <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
                      </HBox.margin>
