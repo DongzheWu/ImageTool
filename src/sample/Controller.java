@@ -1,5 +1,7 @@
 package sample;
 
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.GridPane;
@@ -28,7 +30,17 @@ public class Controller {
     public GridPane grid;
     public ToggleGroup mode;
     public String savePath;
+    public ChoiceBox format;
+    public String fileFormat;
+    ObservableList<String> formatList = FXCollections.observableArrayList(
+            "jpg", "jpeg", "jpe", "png", "bmp", "pbm", "ppm","tiff","tif");
+
     List<File> fileList = new ArrayList<File>();
+
+    public void initialize(){
+        format.setValue("jpg");
+        format.setItems(formatList);
+    }
     public void uploadClick(){
         FileChooser fc2 = new FileChooser();
         FileChooser.ExtensionFilter addextension = new FileChooser.ExtensionFilter("image", "*.png", "*.jpg");
@@ -79,11 +91,13 @@ public class Controller {
 
     public void convertClick(){
         RadioButton selectedRadioButton = (RadioButton) mode.getSelectedToggle();
-        if(fileList.size() == 0){
-            AlertBox ab = new AlertBox();
-            ab.display("Alert", "You haven't upload your images yet!");
-        }
-        CovertIMG covertIMG = new CovertIMG(fileList);
-        covertIMG.start();
+        fileFormat = (String)format.getSelectionModel().getSelectedItem();
+        System.out.println(fileFormat);
+//        if(fileList.size() == 0){
+//            AlertBox ab = new AlertBox();
+//            ab.display("Alert", "You haven't upload your images yet!");
+//        }
+//        CovertIMG covertIMG = new CovertIMG(fileList);
+//        covertIMG.start();
     }
 }
