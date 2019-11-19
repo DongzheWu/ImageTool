@@ -1,20 +1,18 @@
 package sample;
 
+import javafx.fxml.FXML;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.GridPane;
+import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
-import javafx.stage.Window;
 import org.opencv.core.Mat;
 import org.opencv.imgcodecs.Imgcodecs;
 
-import javafx.application.Application;
-import javafx.collections.FXCollections;
-import javafx.fxml.FXMLLoader;
+
 import javafx.geometry.Insets;
-import javafx.scene.Parent;
-import javafx.scene.Scene;
+
 import javafx.scene.control.*;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
@@ -24,12 +22,9 @@ import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
-import java.io.File;
-import java.util.List;
-
 public class Controller {
     Stage newWindow;
-    BorderPane bp;
+    public GridPane grid;
     List<File> fileList = new ArrayList<File>();
     public void uploadClick(){
         FileChooser fc2 = new FileChooser();
@@ -40,19 +35,17 @@ public class Controller {
         if(list != null){
             int row = 0;
             int col = 0;
-            GridPane grid = new GridPane();
             grid.setPadding(new Insets(10, 10, 10, 10));
             grid.setVgap(20);
             grid.setHgap(20);
-            
-            bp.setCenter(grid);
+
+
             for(File file: list){
                 String path = file.toURI().toString();
                 Image img = new Image(path);
+
                 String[] splits = path.split("/");
                 String fileName = splits[splits.length - 1];
-
-
                 path = path.substring(6);
                 Mat imgcv = Imgcodecs.imread(path);
                 int height = imgcv.height();
@@ -65,9 +58,10 @@ public class Controller {
                 imgView.setFitWidth(100);
 
                 fileList.add(file);
-                VBox vbox = new VBox(imgView, label1, label2);
-                GridPane.setConstraints(vbox, col, row);
-                grid.getChildren().add(vbox);
+                VBox vbinside = new VBox(label1, label2);
+                HBox hbox = new HBox(imgView, vbinside);
+                GridPane.setConstraints(hbox, col, row);
+                grid.getChildren().add(hbox);
                 col++;
                 if(col == 3){
                     row++;
