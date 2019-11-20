@@ -82,7 +82,7 @@
                         <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
                      </HBox.margin>
                   </Label>
-                  <Button mnemonicParsing="false" text="Choose Path">
+                  <Button fx:id="choosePath" mnemonicParsing="false" text="Choose Path" onAction="#setSavePath">
                      <HBox.margin>
                         <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
                      </HBox.margin>

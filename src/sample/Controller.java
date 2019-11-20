@@ -9,6 +9,7 @@ import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
+import javafx.stage.DirectoryChooser;
 import org.opencv.core.Mat;
 import org.opencv.imgcodecs.Imgcodecs;
 
@@ -42,6 +43,7 @@ public class Controller {
         format.setValue("jpg");
         format.setItems(formatList);
     }
+
     public void uploadClick(){
         FileChooser fc2 = new FileChooser();
         FileChooser.ExtensionFilter addextension = new FileChooser.ExtensionFilter("image", "*.png", "*.jpg");
@@ -97,6 +99,7 @@ public class Controller {
             if(checkPath()){
                 CovertIMG covertIMG = new CovertIMG(fileList, savePath, fileFormat);
                 covertIMG.start();
+                convertLabel.setText("Your images have been coverted!");
             }
         }
 
@@ -120,5 +123,12 @@ public class Controller {
             return false;
         }
         return true;
+    }
+
+    public void setSavePath(){
+        DirectoryChooser directoryChooser = new DirectoryChooser();
+        File savePathFile = directoryChooser.showDialog(newWindow);
+        savePath = savePathFile.toURI().toString();
+        savePath = savePath.substring(6);
     }
 }
