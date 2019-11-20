@@ -27,6 +27,7 @@ import java.util.List;
 public class Controller {
     Stage newWindow;
     public Label uploadLabel;
+    public Label convertLabel;
     public GridPane grid;
     public ToggleGroup mode;
     public String savePath;
@@ -92,12 +93,32 @@ public class Controller {
     public void convertClick(){
         RadioButton selectedRadioButton = (RadioButton) mode.getSelectedToggle();
         fileFormat = (String)format.getSelectionModel().getSelectedItem();
-        System.out.println(fileFormat);
-//        if(fileList.size() == 0){
-//            AlertBox ab = new AlertBox();
-//            ab.display("Alert", "You haven't upload your images yet!");
-//        }
-//        CovertIMG covertIMG = new CovertIMG(fileList);
-//        covertIMG.start();
+        if(checkfile()){
+            if(checkPath()){
+                CovertIMG covertIMG = new CovertIMG(fileList, savePath, fileFormat);
+                covertIMG.start();
+            }
+        }
+
+    }
+
+
+    //check if files have been uploaded already, before starting to covert imagtes.
+    public boolean checkfile(){
+        if(fileList.size() == 0){
+            AlertBox ab = new AlertBox();
+            ab.display("Alert", "You haven't upload your images yet!");
+            return false;
+        }
+        return true;
+    }
+
+    //check if the save path has been set already, before starting to covert images.
+    public boolean checkPath(){
+        if(savePath == null || savePath.length() == 0){
+            convertLabel.setText("Please select a save path first !");
+            return false;
+        }
+        return true;
     }
 }
