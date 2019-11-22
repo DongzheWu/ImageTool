@@ -15,7 +15,7 @@ public class Main extends Application {
     public void start(Stage primaryStage) throws Exception{
         System.loadLibrary(Core.NATIVE_LIBRARY_NAME);
         window = primaryStage;
-        Parent root = FXMLLoader.load(getClass().getResource("/tool.fxml"));
+        Parent root = FXMLLoader.load(getClass().getResource("/IMGtool.fxml"));
         Scene scene = new Scene(root, 1000, 600);
         primaryStage.setTitle("Image Management Tool");
         primaryStage.setScene(scene);
