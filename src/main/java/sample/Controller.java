@@ -2,28 +2,24 @@ package sample;
 
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
-import javafx.fxml.FXML;
-import javafx.scene.layout.BorderPane;
+import javafx.geometry.Insets;
+import javafx.scene.control.ChoiceBox;
+import javafx.scene.control.Label;
+import javafx.scene.control.RadioButton;
+import javafx.scene.control.ToggleGroup;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
+import javafx.stage.DirectoryChooser;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
-import javafx.stage.DirectoryChooser;
-import org.opencv.core.Mat;
-import org.opencv.imgcodecs.Imgcodecs;
-
-
-import javafx.geometry.Insets;
-
-import javafx.scene.control.*;
-import javafx.scene.image.Image;
-import javafx.scene.image.ImageView;
-
 
 import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 public class Controller {
     Stage newWindow;
@@ -60,23 +56,29 @@ public class Controller {
 
             for(File file: list){
                 String path = file.toURI().toString();
+                ReadIMG readimg = new ReadIMG(file);
+                Map<String, String> info = readimg.getInfoIMG();
                 Image img = new Image(path);
 
-                String[] splits = path.split("/");
-                String fileName = splits[splits.length - 1];
-                path = path.substring(6);
-                Mat imgcv = Imgcodecs.imread(path);
-                int height = imgcv.height();
-                int width = imgcv.width();
-                Label label1 = new Label("Image Name : " + fileName);
-                Label label2 = new Label(" Height : " + height + " Width: " + width);
+//                String[] splits = path.split("/");
+//                String fileName = splits[splits.length - 1];
+//                path = path.substring(6);
+//                Mat imgcv = Imgcodecs.imread(path);
+//                int height = imgcv.height();
+//                int width = imgcv.width();
+//                Label label1 = new Label("Image Name : " + fileName);
+//                Label label2 = new Label(" Height : " + height + " Width: " + width);
+//                VBox vbinside = new VBox(label1, label2);
 
                 ImageView imgView = new ImageView(img);
                 imgView.setFitHeight(100);
                 imgView.setFitWidth(100);
-
+                VBox vbinside = new VBox();
                 fileList.add(file);
-                VBox vbinside = new VBox(label1, label2);
+                for(String s: info.keySet()){
+                    Label l = new Label(s + ": " + info.get(s));
+                    vbinside.getChildren().add(l);
+                }
                 HBox hbox = new HBox(imgView, vbinside);
                 GridPane.setConstraints(hbox, col, row);
                 grid.getChildren().add(hbox);
