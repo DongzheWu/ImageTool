@@ -50,8 +50,7 @@ public class Controller {
             int row = 0;
             int col = 0;
             grid.setPadding(new Insets(10, 10, 10, 10));
-            grid.setVgap(20);
-            grid.setHgap(20);
+
 
 
             for(File file: list){
@@ -74,12 +73,22 @@ public class Controller {
                 imgView.setFitHeight(100);
                 imgView.setFitWidth(100);
                 VBox vbinside = new VBox();
+                vbinside.setPadding(new Insets(0, 0, 0, 15));
                 fileList.add(file);
+
+
+
                 for(String s: info.keySet()){
                     Label l = new Label(s + ": " + info.get(s));
                     vbinside.getChildren().add(l);
                 }
                 HBox hbox = new HBox(imgView, vbinside);
+                hbox.setMargin(imgView, new Insets(3, 3, 3, 3));
+
+                hbox.setStyle("-fx-border-color: gray;" +
+                        "-fx-border-width: 3;" +
+                        "-fx-border-style: solid;");
+
                 GridPane.setConstraints(hbox, col, row);
                 grid.getChildren().add(hbox);
                 col++;
