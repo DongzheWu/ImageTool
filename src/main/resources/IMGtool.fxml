@@ -95,6 +95,11 @@
                               <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
                            </HBox.margin>
                         </RadioButton>
+                        <RadioButton mnemonicParsing="false" text="Line" toggleGroup="$mode">
+                           <HBox.margin>
+                              <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
+                           </HBox.margin>
+                        </RadioButton>
                         <Label text="Format">
                            <HBox.margin>
                               <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
@@ -145,22 +150,7 @@
             </VBox>
          </children>
     </AnchorPane>
-      <ScrollPane prefHeight="716.0" prefWidth="1200.0">
-         <content>
-            <GridPane fx:id="grid" prefHeight="308.0" prefWidth="966.0" style="-fx-grid-lines-visible: false;">
-               <columnConstraints>
-                  <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
-                  <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
-                  <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
-               </columnConstraints>
-               <padding>
-                  <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
-               </padding>
-               <rowConstraints>
-                  <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
-               </rowConstraints>
-            </GridPane>
-         </content>
+      <ScrollPane fx:id="scrollPane" prefHeight="716.0" prefWidth="1200.0">
          <opaqueInsets>
             <Insets />
          </opaqueInsets>

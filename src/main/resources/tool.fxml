@@ -50,6 +50,14 @@
                         <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
                      </HBox.margin>
                   </RadioButton>
+                  <RadioButton mnemonicParsing="false" text="Line" toggleGroup="$mode">
+                     <HBox.margin>
+                        <Insets bottom="10.0" left="1.0" right="10.0" top="10.0" />
+                     </HBox.margin></RadioButton>
+                  <RadioButton mnemonicParsing="false" text="RadioButton" toggleGroup="$mode">
+                     <HBox.margin>
+                        <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
+                     </HBox.margin></RadioButton>
                   <Label text="Format">
                      <HBox.margin>
                         <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
