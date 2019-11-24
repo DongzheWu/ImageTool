@@ -26,7 +26,7 @@ public class showIMG {
         this.grid = grid;
     }
 
-    public void getshow(Label uploadLabel){
+    public void getshow(Label uploadLabel, ImageView singleView){
 
         if(fileList != null){
             int row = 0;
@@ -67,6 +67,14 @@ public class showIMG {
                     vbinside.getChildren().add(l);
                 }
                 HBox hbox = new HBox(imgView, vbinside);
+                hbox.setOnMouseClicked(e -> {
+                    String singlePath = file.toURI().toString();
+                    Image singleImg = new Image(singlePath);
+                    singleView.setImage(singleImg);
+
+
+
+                });
                 hbox.setMargin(imgView, new Insets(3, 3, 3, 3));
 
                 hbox.setStyle("-fx-border-color: gray;" +

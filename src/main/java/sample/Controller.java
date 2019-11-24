@@ -3,6 +3,7 @@ package sample;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.scene.control.*;
+import javafx.scene.image.ImageView;
 import javafx.scene.layout.GridPane;
 import javafx.stage.DirectoryChooser;
 import javafx.stage.FileChooser;
@@ -23,6 +24,8 @@ public class Controller {
     public String fileFormat;
     public String modeFormat;
     public ScrollPane scrollPane;
+    public ProgressIndicator progressIndicator;
+    public ImageView singleView;
 
     ObservableList<String> formatList = FXCollections.observableArrayList(
             "jpg", "jpeg", "jpe", "png", "bmp", "pbm", "ppm","tiff","tif");
@@ -41,8 +44,11 @@ public class Controller {
         FileChooser.ExtensionFilter addextension = new FileChooser.ExtensionFilter("image", "*.png", "*.jpg");
         fc2.getExtensionFilters().add(addextension);
         List<File> fileList = fc2.showOpenMultipleDialog(newWindow);
+
         showIMG show = new showIMG(fileList, grid);
-        show.getshow(uploadLabel);
+
+        show.getshow(uploadLabel, singleView);
+
 
 //        if(list != null){
 //            int row = 0;
