@@ -49,9 +49,9 @@ public class Controller {
         fc2.getExtensionFilters().add(addextension);
         List<File> fileList = fc2.showOpenMultipleDialog(newWindow);
 
-        showIMG show = new showIMG(fileList, grid, preview);
+        showIMG show = new showIMG(fileList, grid, preview, singleView, mode);
         show.preshow();
-        show.getshow(uploadLabel, singleView);
+        show.getshow(uploadLabel);
 
 
 

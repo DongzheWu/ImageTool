@@ -4,6 +4,8 @@ import javafx.geometry.Insets;
 import javafx.scene.Cursor;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
+import javafx.scene.control.RadioButton;
+import javafx.scene.control.ToggleGroup;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.GridPane;
@@ -26,13 +28,18 @@ public class showIMG {
     HBox prev;
     File currentFile;
     Button preview;
-    public showIMG(List<File> fileList, GridPane grid, Button preview){
+    ImageView singleView;
+    ToggleGroup mode;
+
+    public showIMG(List<File> fileList, GridPane grid, Button preview, ImageView singleView, ToggleGroup mode){
         this.fileList = fileList;
         this.grid = grid;
         this.preview = preview;
+        this.singleView = singleView;
+        this.mode = mode;
     }
 
-    public void getshow(Label uploadLabel, ImageView singleView){
+    public void getshow(Label uploadLabel){
 
         if(fileList != null){
             int row = 0;
@@ -124,13 +131,55 @@ public class showIMG {
     }
 
     public void preshow(){
+
         preview.setOnAction(e -> {
+            RadioButton selectedRadioButton = (RadioButton) mode.getSelectedToggle();
+            String modeFormat = selectedRadioButton.getText();
+
             if(currentFile == null){
                 System.out.println("file is none");
             }else{
-                System.out.println(currentFile);
+                System.out.println("....");
+                Mat previewIMG = preResize(currentFile);
+                previewIMG = preChange(previewIMG, modeFormat);
+                MatOfByte byteMat = new MatOfByte();
+                Imgcodecs.imencode(".bmp", previewIMG, byteMat);
+                Image img = new Image(new ByteArrayInputStream(byteMat.toArray()));
+                singleView.setImage(img);
+                singleView.setFitHeight(300);
+                singleView.setFitWidth(400);
             }
         });
+    }
+    public Mat preResize(File currentFile){
+        String path = currentFile.toURI().toString();
+        path = path.substring(6);
+        Mat source = Imgcodecs.imread(path);
+        Mat destination = new Mat();
+        Imgproc.resize(source, destination, new Size(400, 300));
+        return destination;
+    }
+
+    public Mat preChange(Mat source, String type){
+        switch(type){
+            case "Line": return line(source);
+            case "Origin": return source;
+        }
+        return source;
+
+    }
+
+    public Mat line(Mat source){
+        Mat destination = new Mat();
+        double kernel_size = 3;
+        Size size = new Size(3, 3);
+//            Imgproc.GaussianBlur(source, destination, size,0);
+        int low_threshold = 50;
+        int high_threshold = 200;
+        Imgproc.cvtColor(source, destination, Imgproc.COLOR_RGB2GRAY);
+        Imgproc.Canny(source, destination, low_threshold, high_threshold);
+        return destination;
+
     }
 
 }

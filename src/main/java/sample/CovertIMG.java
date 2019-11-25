@@ -14,11 +14,13 @@ public class CovertIMG extends Thread{
     String savePath;
     String fileFormat;
     String modeFormat;
+    Mat destination;
     public CovertIMG(List<File> fileList, String savePath, String fileFormat, String modeFormat){
         this.fileList = fileList;
         this.savePath = savePath;
         this. fileFormat = fileFormat;
         this.modeFormat = modeFormat;
+        destination = new Mat();
     }
     public void run(){
         if(fileList.size() == 0){
@@ -66,4 +68,6 @@ public class CovertIMG extends Thread{
 
         }
     }
+
+
 }
