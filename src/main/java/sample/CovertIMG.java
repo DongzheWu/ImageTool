@@ -64,12 +64,6 @@ public class CovertIMG extends Thread{
             Imgproc.Canny(source, destination, low_threshold, high_threshold);
             Imgcodecs.imwrite(savePath + count + "." + fileFormat, destination);
 
-
-//            blur_gray = cv2.GaussianBlur(gray,(kernel_size, kernel_size), 0)
-//            edges = cv2.Canny(blur_gray, low_threshold, high_threshold)
-//            Imgproc.cvtColor(source, destination, Imgproc.COLOR_RGB2GRAY);
-//            count++;
-//            Imgcodecs.imwrite(savePath + count + "." + fileFormat, destination);
         }
     }
 }

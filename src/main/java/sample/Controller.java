@@ -26,6 +26,8 @@ public class Controller {
     public ScrollPane scrollPane;
     public ProgressIndicator progressIndicator;
     public ImageView singleView;
+    public Button preview;
+    File currentFile;
 
     ObservableList<String> formatList = FXCollections.observableArrayList(
             "jpg", "jpeg", "jpe", "png", "bmp", "pbm", "ppm","tiff","tif");
@@ -37,6 +39,8 @@ public class Controller {
         format.setItems(formatList);
         grid = new GridPane();
         scrollPane.setContent(grid);
+
+
     }
 
     public void uploadClick(){
@@ -45,9 +49,10 @@ public class Controller {
         fc2.getExtensionFilters().add(addextension);
         List<File> fileList = fc2.showOpenMultipleDialog(newWindow);
 
-        showIMG show = new showIMG(fileList, grid);
-
+        showIMG show = new showIMG(fileList, grid, preview);
+        show.preshow();
         show.getshow(uploadLabel, singleView);
+
 
 
 //        if(list != null){

@@ -1,6 +1,8 @@
 package sample;
 
 import javafx.geometry.Insets;
+import javafx.scene.Cursor;
+import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
@@ -21,9 +23,13 @@ import java.util.Map;
 public class showIMG {
     List<File> fileList;
     GridPane grid;
-    public showIMG(List<File> fileList, GridPane grid){
+    HBox prev;
+    File currentFile;
+    Button preview;
+    public showIMG(List<File> fileList, GridPane grid, Button preview){
         this.fileList = fileList;
         this.grid = grid;
+        this.preview = preview;
     }
 
     public void getshow(Label uploadLabel, ImageView singleView){
@@ -66,20 +72,41 @@ public class showIMG {
                     Label l = new Label(s + ": " + info.get(s));
                     vbinside.getChildren().add(l);
                 }
+
                 HBox hbox = new HBox(imgView, vbinside);
-                hbox.setOnMouseClicked(e -> {
+                imgView.setOnMouseEntered(e -> {
+                    imgView.setCursor(Cursor.HAND);
+                });
+                hbox.setStyle("-fx-border-color: gray;" +
+                        "-fx-border-width: 1.5;" +
+                        "-fx-border-style: solid;");
+                imgView.setOnMouseClicked(e -> {
                     String singlePath = file.toURI().toString();
+                    currentFile = file;
                     Image singleImg = new Image(singlePath);
                     singleView.setImage(singleImg);
-
-
+                    singleView.setFitHeight(300);
+                    singleView.setFitWidth(500);
+                    if(prev == null){
+                        hbox.setStyle("-fx-border-color: blue;" +
+                                "-fx-border-width: 1.5;" +
+                                "-fx-border-style: solid;");
+                        prev = hbox;
+                    }else{
+                        prev.setStyle("-fx-border-color: gray;" +
+                                "-fx-border-width: 1.5;" +
+                                "-fx-border-style: solid;");
+                        hbox.setStyle("-fx-border-color: blue;" +
+                                "-fx-border-width: 1.5;" +
+                                "-fx-border-style: solid;");
+                        prev = hbox;
+                    }
 
                 });
+
                 hbox.setMargin(imgView, new Insets(3, 3, 3, 3));
 
-                hbox.setStyle("-fx-border-color: gray;" +
-                        "-fx-border-width: 3;" +
-                        "-fx-border-style: solid;");
+
 
                 GridPane.setConstraints(hbox, col, row);
                 grid.getChildren().add(hbox);
@@ -93,5 +120,17 @@ public class showIMG {
         } else{
             uploadLabel.setText("Something wrong !");
         }
+
     }
+
+    public void preshow(){
+        preview.setOnAction(e -> {
+            if(currentFile == null){
+                System.out.println("file is none");
+            }else{
+                System.out.println(currentFile);
+            }
+        });
+    }
+
 }
