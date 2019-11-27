@@ -2,10 +2,7 @@ package sample;
 
 import javafx.geometry.Insets;
 import javafx.scene.Cursor;
-import javafx.scene.control.Button;
-import javafx.scene.control.Label;
-import javafx.scene.control.RadioButton;
-import javafx.scene.control.ToggleGroup;
+import javafx.scene.control.*;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.GridPane;
@@ -16,6 +13,7 @@ import org.opencv.core.MatOfByte;
 import org.opencv.core.Size;
 import org.opencv.imgcodecs.Imgcodecs;
 import org.opencv.imgproc.Imgproc;
+import org.opencv.core.CvType;
 
 import java.io.ByteArrayInputStream;
 import java.io.File;
@@ -30,13 +28,15 @@ public class showIMG {
     Button preview;
     ImageView singleView;
     ToggleGroup mode;
+    ScrollBar sbar;
 
-    public showIMG(List<File> fileList, GridPane grid, Button preview, ImageView singleView, ToggleGroup mode){
+    public showIMG(List<File> fileList, GridPane grid, Button preview, ImageView singleView, ToggleGroup mode, ScrollBar sbar){
         this.fileList = fileList;
         this.grid = grid;
         this.preview = preview;
         this.singleView = singleView;
         this.mode = mode;
+        this.sbar = sbar;
     }
 
     public void getshow(Label uploadLabel){
@@ -141,9 +141,10 @@ public class showIMG {
             }else{
                 System.out.println("....");
                 Mat previewIMG = preResize(currentFile);
-                previewIMG = preChange(previewIMG, modeFormat);
+                int level = (int)sbar.getValue();
+                previewIMG = preChange(previewIMG, modeFormat, level);
                 MatOfByte byteMat = new MatOfByte();
-                Imgcodecs.imencode(".bmp", previewIMG, byteMat);
+                Imgcodecs.imencode(".jpg", previewIMG, byteMat);
                 Image img = new Image(new ByteArrayInputStream(byteMat.toArray()));
                 singleView.setImage(img);
                 singleView.setFitHeight(300);
@@ -160,26 +161,71 @@ public class showIMG {
         return destination;
     }
 
-    public Mat preChange(Mat source, String type){
+    public Mat preChange(Mat source, String type, int level){
         switch(type){
-            case "Line": return line(source);
+            case "Line": return channel(source, level);
             case "Origin": return source;
         }
         return source;
 
     }
 
-    public Mat line(Mat source){
+    public Mat line(Mat source, int level){
         Mat destination = new Mat();
-        double kernel_size = 3;
-        Size size = new Size(3, 3);
-//            Imgproc.GaussianBlur(source, destination, size,0);
+
+        Size size = new Size(21, 21);
+        Mat temp = new Mat();
+
         int low_threshold = 50;
-        int high_threshold = 200;
-        Imgproc.cvtColor(source, destination, Imgproc.COLOR_RGB2GRAY);
-        Imgproc.Canny(source, destination, low_threshold, high_threshold);
+        int high_threshold = level;
+
+        Imgproc.cvtColor(source, temp, Imgproc.COLOR_RGB2GRAY);
+        Imgproc.medianBlur(temp, source, 7);
+        Mat edge = new Mat();
+        Imgproc.Laplacian(source, edge, CvType.CV_8U, 7);
+//        int cols = temp.cols();
+//        int rows = temp.rows();
+//        int ch = temp.channels();
+
+//        for(int i = 0; i < rows; i++){
+//            for(int j = 0; j < cols; j++){
+//                double[] data = temp.get(i, j);
+//                for(int k = 0; k < ch; k++){
+//                    data[k] = 255 - data[k];
+//                }
+//                temp.put(i, j, data);
+//            }
+//        }
+        Imgproc.threshold(edge, destination, high_threshold, 255, Imgproc.THRESH_BINARY_INV);
+//        Imgproc.GaussianBlur(temp, source, size,0);
+//
+//        Imgproc.Canny(source, destination, low_threshold, high_threshold);
         return destination;
 
     }
+    public Mat channel(Mat source, int level) {
+
+        int rows = source.rows();
+        int cols = source.cols();
+        Mat res = new Mat(rows, cols, source.type());
+        System.out.println(source.type());
+        System.out.println(rows + cols + source.channels());
+        for(int i = 0; i < rows; i++){
+            for(int j = 0; j < cols; j++){
+                double[] data = new double[3];
+                data[0] = 10*Math.sqrt(source.get(i, j)[0]);
+                data[1] = source.get(i, j)[1];
+                data[2] = source.get(i, j)[2];
+
+                res.put(i, j, data);
+
+
+            }
+        }
+        return res;
+
+    }
+
+
 
 }

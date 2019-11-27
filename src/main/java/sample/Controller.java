@@ -27,7 +27,7 @@ public class Controller {
     public ProgressIndicator progressIndicator;
     public ImageView singleView;
     public Button preview;
-    File currentFile;
+    public ScrollBar sbar;
 
     ObservableList<String> formatList = FXCollections.observableArrayList(
             "jpg", "jpeg", "jpe", "png", "bmp", "pbm", "ppm","tiff","tif");
@@ -49,7 +49,7 @@ public class Controller {
         fc2.getExtensionFilters().add(addextension);
         List<File> fileList = fc2.showOpenMultipleDialog(newWindow);
 
-        showIMG show = new showIMG(fileList, grid, preview, singleView, mode);
+        showIMG show = new showIMG(fileList, grid, preview, singleView, mode, sbar);
         show.preshow();
         show.getshow(uploadLabel);
 

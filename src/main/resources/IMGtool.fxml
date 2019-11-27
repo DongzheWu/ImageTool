@@ -112,7 +112,7 @@
                         </HBox>
                         <HBox prefHeight="47.0" prefWidth="502.0">
                            <children>
-                              <ScrollBar prefHeight="18.0" prefWidth="359.0" />
+                              <ScrollBar fx:id="sbar" max="255.0" prefHeight="18.0" prefWidth="359.0" />
                               <Button fx:id="preview" mnemonicParsing="false" text="Preview" />
                            </children>
                         </HBox>
