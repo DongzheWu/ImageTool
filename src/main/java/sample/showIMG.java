@@ -1,5 +1,7 @@
 package sample;
 
+import javafx.beans.value.ChangeListener;
+import javafx.beans.value.ObservableValue;
 import javafx.geometry.Insets;
 import javafx.scene.Cursor;
 import javafx.scene.control.*;
@@ -8,12 +10,12 @@ import javafx.scene.image.ImageView;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
+import org.opencv.core.CvType;
 import org.opencv.core.Mat;
 import org.opencv.core.MatOfByte;
 import org.opencv.core.Size;
 import org.opencv.imgcodecs.Imgcodecs;
 import org.opencv.imgproc.Imgproc;
-import org.opencv.core.CvType;
 
 import java.io.ByteArrayInputStream;
 import java.io.File;
@@ -29,14 +31,71 @@ public class showIMG {
     ImageView singleView;
     ToggleGroup mode;
     ScrollBar sbar;
+    int level;
+    String type;
+    Label sblevel;
+    Label filterLabel;
 
-    public showIMG(List<File> fileList, GridPane grid, Button preview, ImageView singleView, ToggleGroup mode, ScrollBar sbar){
+    public showIMG(List<File> fileList, GridPane grid, Button preview, ImageView singleView, ToggleGroup mode, ScrollBar sbar, Label sblevel, Label filterLabel){
         this.fileList = fileList;
         this.grid = grid;
         this.preview = preview;
         this.singleView = singleView;
         this.mode = mode;
         this.sbar = sbar;
+        this.sblevel = sblevel;
+        this.filterLabel = filterLabel;
+        level = 0;
+        sbar.valueProperty().addListener((ObservableValue<? extends Number> observable, Number oldValue, Number newValue) -> {
+            double max = sbar.getMax();
+
+            level = newValue.intValue();
+            int sbl = (int)(((double)level) / max * 100);
+
+            sblevel.setText(sbl + "%");
+        });
+
+
+        mode.selectedToggleProperty().addListener(new ChangeListener<Toggle>() {
+            @Override
+            public void changed(ObservableValue<? extends Toggle> observable, Toggle oldValue, Toggle newValue) {
+                RadioButton rb = (RadioButton)mode.getSelectedToggle();
+                if(rb != null){
+                    type = rb.getText();
+                    switch(type){
+                        case "Line": {
+                            sbar.setVisible(true);
+                            filterLabel.setVisible(true);
+                            sblevel.setVisible(true);
+                            sbar.setMax(255);
+                            break;
+                        }
+                        case "Origin":{
+                            sbar.setVisible(false);
+                            filterLabel.setVisible(false);
+                            sblevel.setVisible(false);
+                            break;
+                        }
+                        case "Lomo": {
+                            sbar.setVisible(true);
+                            sbar.setMin(5);
+                            sbar.setMax(15);
+                            filterLabel.setVisible(true);
+                            sblevel.setVisible(true);
+                            break;
+                        }
+                        case "Gray": {
+                            sbar.setVisible(false);
+                            filterLabel.setVisible(false);
+                            sblevel.setVisible(false);
+                            break;
+                        }
+                    }
+
+                }
+            }
+        });
+
     }
 
     public void getshow(Label uploadLabel){
@@ -44,7 +103,7 @@ public class showIMG {
         if(fileList != null){
             int row = 0;
             int col = 0;
-            grid.setPadding(new Insets(10, 10, 10, 10));
+            grid.setPadding(new Insets(50, 50, 50, 50));
 
 
 
@@ -62,9 +121,6 @@ public class showIMG {
                 MatOfByte byteMat = new MatOfByte();
                 Imgcodecs.imencode(".bmp", destination, byteMat);
                 Image img = new Image(new ByteArrayInputStream(byteMat.toArray()));
-
-//                Image img = new Image(path);
-
 
                 ImageView imgView = new ImageView(img);
                 imgView.setFitHeight(100);
@@ -133,16 +189,12 @@ public class showIMG {
     public void preshow(){
 
         preview.setOnAction(e -> {
-            RadioButton selectedRadioButton = (RadioButton) mode.getSelectedToggle();
-            String modeFormat = selectedRadioButton.getText();
 
             if(currentFile == null){
                 System.out.println("file is none");
             }else{
-                System.out.println("....");
                 Mat previewIMG = preResize(currentFile);
-                int level = (int)sbar.getValue();
-                previewIMG = preChange(previewIMG, modeFormat, level);
+                previewIMG = preChange(previewIMG, sbar);
                 MatOfByte byteMat = new MatOfByte();
                 Imgcodecs.imencode(".jpg", previewIMG, byteMat);
                 Image img = new Image(new ByteArrayInputStream(byteMat.toArray()));
@@ -161,16 +213,26 @@ public class showIMG {
         return destination;
     }
 
-    public Mat preChange(Mat source, String type, int level){
+    public Mat preChange(Mat source, ScrollBar sbar){
         switch(type){
-            case "Line": return channel(source, level);
-            case "Origin": return source;
+            case "Line": {
+                return line(source);
+            }
+            case "Origin":{
+                return source;
+            }
+            case "Lomo": {
+                return lomo(source);
+            }
+            case "Gray": {
+                return gray(source);
+            }
         }
         return source;
 
     }
 
-    public Mat line(Mat source, int level){
+    public Mat line(Mat source){
         Mat destination = new Mat();
 
         Size size = new Size(21, 21);
@@ -203,17 +265,15 @@ public class showIMG {
         return destination;
 
     }
-    public Mat channel(Mat source, int level) {
+    public Mat lomo(Mat source) {
 
         int rows = source.rows();
         int cols = source.cols();
         Mat res = new Mat(rows, cols, source.type());
-        System.out.println(source.type());
-        System.out.println(rows + cols + source.channels());
         for(int i = 0; i < rows; i++){
             for(int j = 0; j < cols; j++){
                 double[] data = new double[3];
-                data[0] = 10*Math.sqrt(source.get(i, j)[0]);
+                data[0] = level*Math.sqrt(source.get(i, j)[0]);
                 data[1] = source.get(i, j)[1];
                 data[2] = source.get(i, j)[2];
 
@@ -223,7 +283,12 @@ public class showIMG {
             }
         }
         return res;
+    }
 
+    public Mat gray(Mat source){
+        Mat res = new Mat();
+        Imgproc.cvtColor(source, res, Imgproc.COLOR_RGB2GRAY);
+        return res;
     }
 
 

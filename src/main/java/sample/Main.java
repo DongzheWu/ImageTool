@@ -16,7 +16,7 @@ public class Main extends Application {
         System.loadLibrary(Core.NATIVE_LIBRARY_NAME);
         window = primaryStage;
         Parent root = FXMLLoader.load(getClass().getResource("/IMGtool.fxml"));
-        Scene scene = new Scene(root, 1000, 600);
+        Scene scene = new Scene(root, 1100, 800);
         primaryStage.setTitle("Image Management Tool");
         primaryStage.setScene(scene);
         primaryStage.show();

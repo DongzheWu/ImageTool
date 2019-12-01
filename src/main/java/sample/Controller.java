@@ -17,6 +17,8 @@ public class Controller {
     Stage newWindow;
     public Label uploadLabel;
     public Label convertLabel;
+    public Label sblevel;
+    public Label filterLabel;
     public GridPane grid;
     public ToggleGroup mode;
     public String savePath;
@@ -39,7 +41,8 @@ public class Controller {
         format.setItems(formatList);
         grid = new GridPane();
         scrollPane.setContent(grid);
-
+        sbar.setVisible(false);
+        filterLabel.setVisible(false);
 
     }
 
@@ -49,7 +52,7 @@ public class Controller {
         fc2.getExtensionFilters().add(addextension);
         List<File> fileList = fc2.showOpenMultipleDialog(newWindow);
 
-        showIMG show = new showIMG(fileList, grid, preview, singleView, mode, sbar);
+        showIMG show = new showIMG(fileList, grid, preview, singleView, mode, sbar, sblevel, filterLabel);
         show.preshow();
         show.getshow(uploadLabel);
 
