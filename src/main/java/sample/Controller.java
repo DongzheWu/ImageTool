@@ -50,72 +50,19 @@ public class Controller {
         FileChooser fc2 = new FileChooser();
         FileChooser.ExtensionFilter addextension = new FileChooser.ExtensionFilter("image", "*.png", "*.jpg");
         fc2.getExtensionFilters().add(addextension);
-        List<File> fileList = fc2.showOpenMultipleDialog(newWindow);
+        fileList = fc2.showOpenMultipleDialog(newWindow);
 
         showIMG show = new showIMG(fileList, grid, preview, singleView, mode, sbar, sblevel, filterLabel);
         show.preshow();
         show.getshow(uploadLabel);
 
-
-
-//        if(list != null){
-//            int row = 0;
-//            int col = 0;
-//            grid.setPadding(new Insets(10, 10, 10, 10));
-//
-//
-//
-//            for(File file: list){
-//                String path = file.toURI().toString();
-//                ReadIMG readimg = new ReadIMG(file);
-//                Map<String, String> info = readimg.getInfoIMG();
-//                Image img = new Image(path);
-//
-//
-//                ImageView imgView = new ImageView(img);
-//                imgView.setFitHeight(100);
-//                imgView.setFitWidth(100);//                String[] splits = path.split("/");
-//
-//
-//                VBox vbinside = new VBox();
-//                vbinside.setPadding(new Insets(0, 0, 0, 15));
-//                fileList.add(file);
-//
-//
-//
-//                for(String s: info.keySet()){
-//                    Label l = new Label(s + ": " + info.get(s));
-//                    vbinside.getChildren().add(l);
-//                }
-//                HBox hbox = new HBox(imgView, vbinside);
-//                hbox.setMargin(imgView, new Insets(3, 3, 3, 3));
-//
-//                hbox.setStyle("-fx-border-color: gray;" +
-//                        "-fx-border-width: 3;" +
-//                        "-fx-border-style: solid;");
-//
-//                GridPane.setConstraints(hbox, col, row);
-//                grid.getChildren().add(hbox);
-//                col++;
-//                if(col == 3){
-//                    row++;
-//                    col = 0;
-//                    }
-//                }
-//            uploadLabel.setText("Upload finished !");
-//        } else{
-//            uploadLabel.setText("Something wrong !");
-//        }
     }
 
     public void convertClick(){
-        RadioButton selectedRadioButton = (RadioButton) mode.getSelectedToggle();
-        modeFormat = selectedRadioButton.getText();
-        System.out.println(modeFormat);
         fileFormat = (String)format.getSelectionModel().getSelectedItem();
         if(checkfile()){
             if(checkPath()){
-                CovertIMG covertIMG = new CovertIMG(fileList, savePath, fileFormat, modeFormat);
+                CovertIMG covertIMG = new CovertIMG(fileList, savePath, fileFormat, mode, sbar);
                 covertIMG.start();
                 convertLabel.setText("Your images have been coverted!");
             }

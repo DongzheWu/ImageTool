@@ -238,30 +238,12 @@ public class showIMG {
         Size size = new Size(21, 21);
         Mat temp = new Mat();
 
-        int low_threshold = 50;
-        int high_threshold = level;
-
         Imgproc.cvtColor(source, temp, Imgproc.COLOR_RGB2GRAY);
         Imgproc.medianBlur(temp, source, 7);
         Mat edge = new Mat();
         Imgproc.Laplacian(source, edge, CvType.CV_8U, 7);
-//        int cols = temp.cols();
-//        int rows = temp.rows();
-//        int ch = temp.channels();
+        Imgproc.threshold(edge, destination, level, 255, Imgproc.THRESH_BINARY_INV);
 
-//        for(int i = 0; i < rows; i++){
-//            for(int j = 0; j < cols; j++){
-//                double[] data = temp.get(i, j);
-//                for(int k = 0; k < ch; k++){
-//                    data[k] = 255 - data[k];
-//                }
-//                temp.put(i, j, data);
-//            }
-//        }
-        Imgproc.threshold(edge, destination, high_threshold, 255, Imgproc.THRESH_BINARY_INV);
-//        Imgproc.GaussianBlur(temp, source, size,0);
-//
-//        Imgproc.Canny(source, destination, low_threshold, high_threshold);
         return destination;
 
     }

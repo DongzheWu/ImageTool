@@ -1,5 +1,9 @@
 package sample;
 
+import javafx.scene.control.RadioButton;
+import javafx.scene.control.ScrollBar;
+import javafx.scene.control.ToggleGroup;
+import org.opencv.core.CvType;
 import org.opencv.core.Mat;
 import org.opencv.core.Size;
 import org.opencv.imgcodecs.Imgcodecs;
@@ -15,12 +19,17 @@ public class CovertIMG extends Thread{
     String fileFormat;
     String modeFormat;
     Mat destination;
-    public CovertIMG(List<File> fileList, String savePath, String fileFormat, String modeFormat){
+    int level;
+
+    public CovertIMG(List<File> fileList, String savePath, String fileFormat, ToggleGroup mode, ScrollBar sbar){
         this.fileList = fileList;
         this.savePath = savePath;
-        this. fileFormat = fileFormat;
-        this.modeFormat = modeFormat;
+        this.fileFormat = fileFormat;
         destination = new Mat();
+
+        RadioButton selectedRadioButton = (RadioButton) mode.getSelectedToggle();
+        modeFormat = selectedRadioButton.getText();
+        level = (int)sbar.getValue();
     }
     public void run(){
         if(fileList.size() == 0){
@@ -29,11 +38,15 @@ public class CovertIMG extends Thread{
         }else {
             switch (modeFormat){
                 case "Gray": changeGray();
+                break;
                 case "Line": changeLine();
+                break;
+                case "Origin": imgsave();
+                break;
+                case "Lomo": changeLomo();
+                break;
 
             }
-
-
         }
     }
 
@@ -56,18 +69,56 @@ public class CovertIMG extends Thread{
             String path = file.toURI().toString();
             path = path.substring(6);
             Mat source = Imgcodecs.imread(path);
-            Mat destination = new Mat();
-            double kernel_size = 3;
-            Size size = new Size(3, 3);
-//            Imgproc.GaussianBlur(source, destination, size,0);
-            int low_threshold = 50;
-            int high_threshold = 200;
-            Imgproc.cvtColor(source, destination, Imgproc.COLOR_RGB2GRAY);
-            Imgproc.Canny(source, destination, low_threshold, high_threshold);
-            Imgcodecs.imwrite(savePath + count + "." + fileFormat, destination);
 
+            Mat destination = new Mat();
+
+            Size size = new Size(21, 21);
+            Mat temp = new Mat();
+
+            Imgproc.cvtColor(source, temp, Imgproc.COLOR_RGB2GRAY);
+            Imgproc.medianBlur(temp, source, 7);
+            Mat edge = new Mat();
+            Imgproc.Laplacian(source, edge, CvType.CV_8U, 7);
+            Imgproc.threshold(edge, destination, level, 255, Imgproc.THRESH_BINARY_INV);
+            count++;
+
+            Imgcodecs.imwrite(savePath + count + "." + fileFormat, destination);
         }
     }
 
+    public void changeLomo(){
+        int count = 0;
+        for (File file : fileList){
+            String path = file.toURI().toString();
+            path = path.substring(6);
+            Mat source = Imgcodecs.imread(path);
+
+            int rows = source.rows();
+            int cols = source.cols();
+            Mat destination = new Mat(rows, cols, source.type());
+            for(int i = 0; i < rows; i++){
+                for(int j = 0; j < cols; j++){
+                    double[] data = new double[3];
+                    data[0] = level*Math.sqrt(source.get(i, j)[0]);
+                    data[1] = source.get(i, j)[1];
+                    data[2] = source.get(i, j)[2];
+
+                    destination.put(i, j, data);
+                }
+            }
+            count++;
+            Imgcodecs.imwrite(savePath + count + "." + fileFormat, destination);
+        }
+
+    }
+
+    public void imgsave(){
+        int count = 0;
+        for (File file : fileList) {
+            count++;
+            Imgcodecs.imwrite(savePath + count + "." + fileFormat, destination);
+        }
+
+    }
 
 }
