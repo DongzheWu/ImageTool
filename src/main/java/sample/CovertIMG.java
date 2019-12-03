@@ -1,8 +1,6 @@
 package sample;
 
-import javafx.scene.control.RadioButton;
-import javafx.scene.control.ScrollBar;
-import javafx.scene.control.ToggleGroup;
+import javafx.scene.control.*;
 import org.opencv.core.CvType;
 import org.opencv.core.Mat;
 import org.opencv.core.Size;
@@ -20,11 +18,15 @@ public class CovertIMG extends Thread{
     String modeFormat;
     Mat destination;
     int level;
+    Label convertLabel;
+    ProgressIndicator cProgress;
 
-    public CovertIMG(List<File> fileList, String savePath, String fileFormat, ToggleGroup mode, ScrollBar sbar){
+    public CovertIMG(List<File> fileList, String savePath, String fileFormat, ToggleGroup mode, ScrollBar sbar, ProgressIndicator cProgress){
         this.fileList = fileList;
         this.savePath = savePath;
         this.fileFormat = fileFormat;
+        this.cProgress = cProgress;
+        this.convertLabel = convertLabel;
         destination = new Mat();
 
         RadioButton selectedRadioButton = (RadioButton) mode.getSelectedToggle();
@@ -36,15 +38,19 @@ public class CovertIMG extends Thread{
             System.out.println("Please upload your images");
 
         }else {
-            switch (modeFormat){
-                case "Gray": changeGray();
-                break;
-                case "Line": changeLine();
-                break;
-                case "Origin": imgsave();
-                break;
-                case "Lomo": changeLomo();
-                break;
+            switch (modeFormat) {
+                case "Gray":
+                    changeGray();
+                    break;
+                case "Line":
+                    changeLine();
+                    break;
+                case "Origin":
+                    imgsave();
+                    break;
+                case "Lomo":
+                    changeLomo();
+                    break;
 
             }
         }
@@ -59,6 +65,7 @@ public class CovertIMG extends Thread{
             Mat destination = new Mat();
             Imgproc.cvtColor(source, destination, Imgproc.COLOR_RGB2GRAY);
             count++;
+            cProgress.setProgress((double)count/(double)fileList.size());
             Imgcodecs.imwrite(savePath + count + "." + fileFormat, destination);
         }
     }
@@ -81,6 +88,7 @@ public class CovertIMG extends Thread{
             Imgproc.Laplacian(source, edge, CvType.CV_8U, 7);
             Imgproc.threshold(edge, destination, level, 255, Imgproc.THRESH_BINARY_INV);
             count++;
+            cProgress.setProgress((double)count/(double)fileList.size());
 
             Imgcodecs.imwrite(savePath + count + "." + fileFormat, destination);
         }
@@ -107,18 +115,19 @@ public class CovertIMG extends Thread{
                 }
             }
             count++;
+            cProgress.setProgress((double)count/(double)fileList.size());
             Imgcodecs.imwrite(savePath + count + "." + fileFormat, destination);
         }
-
     }
 
     public void imgsave(){
         int count = 0;
         for (File file : fileList) {
             count++;
+            cProgress.setProgress((double)count/(double)fileList.size());
             Imgcodecs.imwrite(savePath + count + "." + fileFormat, destination);
         }
-
     }
+
 
 }

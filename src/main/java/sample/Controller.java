@@ -19,6 +19,7 @@ public class Controller {
     public Label convertLabel;
     public Label sblevel;
     public Label filterLabel;
+    public Label showPath;
     public GridPane grid;
     public ToggleGroup mode;
     public String savePath;
@@ -26,7 +27,7 @@ public class Controller {
     public String fileFormat;
     public String modeFormat;
     public ScrollPane scrollPane;
-    public ProgressIndicator progressIndicator;
+    public ProgressIndicator cProgress;
     public ImageView singleView;
     public Button preview;
     public ScrollBar sbar;
@@ -43,6 +44,8 @@ public class Controller {
         scrollPane.setContent(grid);
         sbar.setVisible(false);
         filterLabel.setVisible(false);
+        cProgress.setVisible(false);
+
 
     }
 
@@ -62,9 +65,9 @@ public class Controller {
         fileFormat = (String)format.getSelectionModel().getSelectedItem();
         if(checkfile()){
             if(checkPath()){
-                CovertIMG covertIMG = new CovertIMG(fileList, savePath, fileFormat, mode, sbar);
+                cProgress.setVisible(true);
+                CovertIMG covertIMG = new CovertIMG(fileList, savePath, fileFormat, mode, sbar, cProgress);
                 covertIMG.start();
-                convertLabel.setText("Your images have been coverted!");
             }
         }
 
@@ -84,7 +87,8 @@ public class Controller {
     //check if the save path has been set already, before starting to covert images.
     public boolean checkPath(){
         if(savePath == null || savePath.length() == 0){
-            convertLabel.setText("Please select a save path first !");
+            convertLabel.setVisible(true);
+            convertLabel.setText("Please select save path first !");
             return false;
         }
         return true;
@@ -95,5 +99,7 @@ public class Controller {
         File savePathFile = directoryChooser.showDialog(newWindow);
         savePath = savePathFile.toURI().toString();
         savePath = savePath.substring(6);
+        showPath.setText(savePath);
+        convertLabel.setVisible(false);
     }
 }
