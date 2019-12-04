@@ -36,6 +36,7 @@ public class showIMG {
     Label sblevel;
     Label filterLabel;
 
+    //Initialize showIMG class
     public showIMG(List<File> fileList, GridPane grid, Button preview, ImageView singleView, ToggleGroup mode, ScrollBar sbar, Label sblevel, Label filterLabel){
         this.fileList = fileList;
         this.grid = grid;
@@ -46,6 +47,7 @@ public class showIMG {
         this.sblevel = sblevel;
         this.filterLabel = filterLabel;
         level = 0;
+        // addListener to scrollbar for adjusting the level of tint/filter effect.
         sbar.valueProperty().addListener((ObservableValue<? extends Number> observable, Number oldValue, Number newValue) -> {
             double max = sbar.getMax();
 
@@ -55,7 +57,7 @@ public class showIMG {
             sblevel.setText(sbl + "%");
         });
 
-
+        //addListener to read which(gray, lomo, line or origin) mode is selected
         mode.selectedToggleProperty().addListener(new ChangeListener<Toggle>() {
             @Override
             public void changed(ObservableValue<? extends Toggle> observable, Toggle oldValue, Toggle newValue) {
@@ -63,6 +65,7 @@ public class showIMG {
                 if(rb != null){
                     type = rb.getText();
                     switch(type){
+                        // mode Line, show and set scrollbar
                         case "Line": {
                             sbar.setVisible(true);
                             filterLabel.setVisible(true);
@@ -70,12 +73,14 @@ public class showIMG {
                             sbar.setMax(255);
                             break;
                         }
+                        // mode origin, hide scrollbar
                         case "Origin":{
                             sbar.setVisible(false);
                             filterLabel.setVisible(false);
                             sblevel.setVisible(false);
                             break;
                         }
+                        // mode lomo, show and set scrollbar
                         case "Lomo": {
                             sbar.setVisible(true);
                             sbar.setMin(5);
@@ -84,6 +89,7 @@ public class showIMG {
                             sblevel.setVisible(true);
                             break;
                         }
+                        // mode gray, hide scrollbar
                         case "Gray": {
                             sbar.setVisible(false);
                             filterLabel.setVisible(false);
@@ -97,7 +103,7 @@ public class showIMG {
         });
 
     }
-
+    //read images from path folder and show them in the Javafx GUI.
     public void getshow(Label uploadLabel){
 
         if(fileList != null){
@@ -109,13 +115,16 @@ public class showIMG {
 
             for(File file: fileList){
                 String path = file.toURI().toString();
+                // initialize readIMG class
                 ReadIMG readimg = new ReadIMG(file);
                 Map<String, String> info = readimg.getInfoIMG();
 
 
                 path = path.substring(6);
+                // user opencv read images from path
                 Mat source = Imgcodecs.imread(path);
                 Mat destination = new Mat();
+                // resize images
                 Imgproc.resize(source, destination, new Size(100, 100));
 
                 MatOfByte byteMat = new MatOfByte();
@@ -123,6 +132,7 @@ public class showIMG {
                 Image img = new Image(new ByteArrayInputStream(byteMat.toArray()));
 
                 ImageView imgView = new ImageView(img);
+                // resize the imgView
                 imgView.setFitHeight(100);
                 imgView.setFitWidth(100);//                String[] splits = path.split("/");
 
@@ -143,6 +153,7 @@ public class showIMG {
                 hbox.setStyle("-fx-border-color: gray;" +
                         "-fx-border-width: 1.5;" +
                         "-fx-border-style: solid;");
+                // When an image is clicked, preview it by 500*300 size
                 imgView.setOnMouseClicked(e -> {
                     String singlePath = file.toURI().toString();
                     currentFile = file;
@@ -150,6 +161,7 @@ public class showIMG {
                     singleView.setImage(singleImg);
                     singleView.setFitHeight(300);
                     singleView.setFitWidth(500);
+                    // add border to the image that is clicked.
                     if(prev == null){
                         hbox.setStyle("-fx-border-color: blue;" +
                                 "-fx-border-width: 1.5;" +
@@ -170,7 +182,7 @@ public class showIMG {
                 hbox.setMargin(imgView, new Insets(3, 3, 3, 3));
 
 
-
+                // Put all images in the gridpane
                 GridPane.setConstraints(hbox, col, row);
                 grid.getChildren().add(hbox);
                 col++;
@@ -179,20 +191,23 @@ public class showIMG {
                     col = 0;
                 }
             }
+            // change label
             uploadLabel.setText("Upload finished !");
         } else{
+            // change label
             uploadLabel.setText("Something wrong !");
         }
 
     }
-
+    // preview image
     public void preshow(){
-
+        // preview is clicked
         preview.setOnAction(e -> {
-
+            // check if any image is clicked
             if(currentFile == null){
                 System.out.println("file is none");
             }else{
+                //read image and apply tint/filter mode to the image
                 Mat previewIMG = preResize(currentFile);
                 previewIMG = preChange(previewIMG, sbar);
                 MatOfByte byteMat = new MatOfByte();
@@ -204,15 +219,16 @@ public class showIMG {
             }
         });
     }
+    // resize the image for preview
     public Mat preResize(File currentFile){
         String path = currentFile.toURI().toString();
         path = path.substring(6);
         Mat source = Imgcodecs.imread(path);
         Mat destination = new Mat();
-        Imgproc.resize(source, destination, new Size(400, 300));
+        Imgproc.resize(source, destination, new Size(800, 600));
         return destination;
     }
-
+    // apply the filter to preview image
     public Mat preChange(Mat source, ScrollBar sbar){
         switch(type){
             case "Line": {
@@ -231,7 +247,7 @@ public class showIMG {
         return source;
 
     }
-
+    // line filter effect function
     public Mat line(Mat source){
         Mat destination = new Mat();
 
@@ -247,6 +263,7 @@ public class showIMG {
         return destination;
 
     }
+    // lomo filter effect function
     public Mat lomo(Mat source) {
 
         int rows = source.rows();
@@ -266,7 +283,7 @@ public class showIMG {
         }
         return res;
     }
-
+    // gray filter effect function
     public Mat gray(Mat source){
         Mat res = new Mat();
         Imgproc.cvtColor(source, res, Imgproc.COLOR_RGB2GRAY);

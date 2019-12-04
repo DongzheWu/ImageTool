@@ -32,6 +32,7 @@ public class Controller {
     public Button preview;
     public ScrollBar sbar;
 
+    //Set file format extensions can be read by FileChooser
     ObservableList<String> formatList = FXCollections.observableArrayList(
             "jpg", "jpeg", "jpe", "png", "bmp", "pbm", "ppm","tiff","tif");
 
@@ -48,20 +49,24 @@ public class Controller {
 
 
     }
-
+    // Set images folder path and read images from the path
     public void uploadClick(){
+        // read images folder path
         FileChooser fc2 = new FileChooser();
         FileChooser.ExtensionFilter addextension = new FileChooser.ExtensionFilter("image", "*.png", "*.jpg");
         fc2.getExtensionFilters().add(addextension);
         fileList = fc2.showOpenMultipleDialog(newWindow);
 
+        //Initiate showIMG class and show images in the Javafx GUI
         showIMG show = new showIMG(fileList, grid, preview, singleView, mode, sbar, sblevel, filterLabel);
         show.preshow();
         show.getshow(uploadLabel);
 
     }
 
+    // when convert button is clicked, convertClick function will be called.
     public void convertClick(){
+        // read selected format(jpg, png ...)
         fileFormat = (String)format.getSelectionModel().getSelectedItem();
         if(checkfile()){
             if(checkPath()){
@@ -94,6 +99,7 @@ public class Controller {
         return true;
     }
 
+    // set save path for converted images.
     public void setSavePath(){
         DirectoryChooser directoryChooser = new DirectoryChooser();
         File savePathFile = directoryChooser.showDialog(newWindow);
