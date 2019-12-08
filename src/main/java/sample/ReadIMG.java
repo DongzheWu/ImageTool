@@ -17,13 +17,16 @@ public class ReadIMG{
     Map<String, String> info;
     public ReadIMG(File file){
         this.file = file;
+        // use map to store data
         info = new HashMap<>();
     }
 
     public Map<String, String> getInfoIMG(){
         try{
+            // read Metadata
             Metadata metadata = ImageMetadataReader.readMetadata(file);
             FileSystemDirectory d5 = metadata.getFirstDirectoryOfType(FileSystemDirectory.class);
+            // read name and size
             System.out.println(d5.getString(FileSystemDirectory.TAG_FILE_NAME));
             System.out.println(d5.getString(FileSystemDirectory.TAG_FILE_SIZE));
             String name = d5.getString(FileSystemDirectory.TAG_FILE_NAME);
@@ -31,11 +34,13 @@ public class ReadIMG{
             String size = d5.getString(FileSystemDirectory.TAG_FILE_SIZE);
             info.put("size", size);
 
+            // read date
             ExifSubIFDDirectory d1 = metadata.getFirstDirectoryOfType(ExifSubIFDDirectory.class);
             System.out.println(d1.getDate(ExifSubIFDDirectory.TAG_DATETIME_ORIGINAL));
             String date = d1.getString(ExifSubIFDDirectory.TAG_DATETIME_ORIGINAL);
             info.put("date", date);
 
+            // read make and model
             ExifIFD0Directory d2 = metadata.getFirstDirectoryOfType(ExifIFD0Directory.class);
             System.out.println(d2.getString(ExifIFD0Directory.TAG_MAKE));
             System.out.println(d2.getString(ExifIFD0Directory.TAG_MODEL));
@@ -45,6 +50,7 @@ public class ReadIMG{
             String model = d2.getString(ExifIFD0Directory.TAG_MODEL);
             info.put("model", model);
 
+            //read latitude and longtitude
             GpsDirectory d3 = metadata.getFirstDirectoryOfType(GpsDirectory.class);
             System.out.println(d3.getString(GpsDirectory.TAG_LATITUDE));
             System.out.println(d3.getString(GpsDirectory.TAG_LONGITUDE));
@@ -56,7 +62,7 @@ public class ReadIMG{
 
             JpegDirectory d4 = metadata.getFirstDirectoryOfType(JpegDirectory.class);
 
-
+            //read width and height
             System.out.println("height: " + d4.getInteger(JpegDirectory.TAG_IMAGE_HEIGHT));
             String width = d4.getString(JpegDirectory.TAG_IMAGE_WIDTH);
             String height = d4.getString(JpegDirectory.TAG_IMAGE_HEIGHT);
@@ -64,14 +70,6 @@ public class ReadIMG{
             info.put("width", width);
             info.put("height", height);
 
-
-
-//            for (Directory directory : metadata.getDirectories()) {
-//
-//                for (Tag tag : directory.getTags()) {
-//                    System.out.println(tag);
-//                }
-//            }
         }catch (Exception e){
             System.out.println("Cannot read this image!");
         }

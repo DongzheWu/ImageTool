@@ -105,6 +105,7 @@ public class showIMG {
     }
     //read images from path folder and show them in the Javafx GUI.
     public void getshow(Label uploadLabel){
+        grid.getChildren().clear();
 
         if(fileList != null){
             int row = 0;
@@ -115,7 +116,7 @@ public class showIMG {
 
             for(File file: fileList){
                 String path = file.toURI().toString();
-                // initialize readIMG class
+                // initialize readIMG class and read data(location, size, camera) from images
                 ReadIMG readimg = new ReadIMG(file);
                 Map<String, String> info = readimg.getInfoIMG();
 

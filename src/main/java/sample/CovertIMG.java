@@ -30,14 +30,17 @@ public class CovertIMG extends Thread{
         destination = new Mat();
 
         RadioButton selectedRadioButton = (RadioButton) mode.getSelectedToggle();
+        //read modeformat(gray, line, origin..) is selected
         modeFormat = selectedRadioButton.getText();
         level = (int)sbar.getValue();
     }
+    // use multiple thread to convert images
     public void run(){
         if(fileList.size() == 0){
             System.out.println("Please upload your images");
 
         }else {
+            // apply filter effect to the image
             switch (modeFormat) {
                 case "Gray":
                     changeGray();
@@ -55,7 +58,7 @@ public class CovertIMG extends Thread{
             }
         }
     }
-
+    // gray filter effect function
     public void changeGray(){
         int count = 0;
         for (File file : fileList) {
@@ -69,7 +72,7 @@ public class CovertIMG extends Thread{
             Imgcodecs.imwrite(savePath + count + "." + fileFormat, destination);
         }
     }
-
+    // line filter effect function
     public void changeLine(){
         int count = 0;
         for (File file : fileList) {
@@ -93,7 +96,7 @@ public class CovertIMG extends Thread{
             Imgcodecs.imwrite(savePath + count + "." + fileFormat, destination);
         }
     }
-
+    //lomo filter effect function
     public void changeLomo(){
         int count = 0;
         for (File file : fileList){
@@ -119,7 +122,7 @@ public class CovertIMG extends Thread{
             Imgcodecs.imwrite(savePath + count + "." + fileFormat, destination);
         }
     }
-
+    // rename images by count and save if by selected format(png, jpg...)
     public void imgsave(){
         int count = 0;
         for (File file : fileList) {
