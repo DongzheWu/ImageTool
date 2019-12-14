@@ -82,8 +82,8 @@ public class Controller {
     //check if files have been uploaded already, before starting to covert imagtes.
     public boolean checkfile(){
         if(fileList.size() == 0){
-            AlertBox ab = new AlertBox();
-            ab.display("Alert", "You haven't upload your images yet!");
+            AlertBox uploadAlert = new UploadAlertBox();
+            uploadAlert.display();
             return false;
         }
         return true;
@@ -94,6 +94,8 @@ public class Controller {
         if(savePath == null || savePath.length() == 0){
             convertLabel.setVisible(true);
             convertLabel.setText("Please select save path first !");
+            AlertBox pathAlert = new SaveAlertBox();
+            pathAlert.display();
             return false;
         }
         return true;
